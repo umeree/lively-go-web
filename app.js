@@ -20,7 +20,9 @@ app.use((_, res, next) => {
 // Import all routes
 
 const auth = require("./routes/auth");
+const users = require("./routes/users");
 
 app.use("/api/v1", auth);
+app.use("/api/v1", users);
 
 module.exports = app;
