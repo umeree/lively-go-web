@@ -15,9 +15,17 @@ router.route("/login_user").get((req, res) => {
           email,
         },
       })
-      .then(() => {
-        console.log(result);
-        res.status(200).json({ message: "found user!" });
+      .then((query_res) => {
+        if (query_res) {
+          res.status(200).json({
+            status: "found",
+            email: query_res.email,
+            first_name: query_res.first_name,
+            last_name: query_res.last_name,
+          });
+        } else {
+          res.status(404).json({ status: "user not found" });
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -46,9 +54,10 @@ router.route("/register_user").post((req, res) => {
           password,
         },
       })
-      .then(() => {
-        console.log(result);
-        res.status(200).json({ message: "created!" });
+      .then((query_res) => {
+        if (query_res) {
+          res.status(200).json({ message: "created!" });
+        }
       })
       .catch((error) => {
         console.log(error);
