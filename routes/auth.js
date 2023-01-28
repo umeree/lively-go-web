@@ -2,6 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 const prisma = require("../lib/prisma");
+const jwt = require("jsonwebtoken");
 
 router.route("/login_user").get((req, res) => {
   console.log("login_user api hit!");
@@ -17,11 +18,15 @@ router.route("/login_user").get((req, res) => {
       })
       .then((query_res) => {
         if (query_res) {
+          const token = jwt.sign({ email: req.body.email }, "secret", {
+            expiresIn: "1h",
+          });
           res.status(200).json({
             status: "found",
             email: query_res.email,
             first_name: query_res.first_name,
             last_name: query_res.last_name,
+            token,
           });
         } else {
           res.status(404).json({ status: "user not found" });
