@@ -4,31 +4,44 @@ const prisma = new PrismaClient();
 
 async function seed() {
   try {
-    await prisma.user.deleteMany();
-    console.log("All users destroyed!");
-    await prisma.user.createMany({
+    await prisma.role.deleteMany();
+    console.log("All roles destroyed!");
+    await prisma.role.createMany({
       data: [
         {
-          email: "munyyb@gmail.com",
-          first_name: "Muneeb",
-          last_name: "ur rehman",
-          password: "admin1234",
+          title: "user"
         },
         {
-          email: "samran@gmail.com",
-          first_name: "samran",
-          last_name: "Ahmed",
-          password: "admin1234",
+          title: "streamer"
         },
         {
-          email: "umer@gmail.com",
-          first_name: "umer",
-          last_name: "Nadeem",
-          password: "admin1234",
-        },
-      ],
+          title: "admin"
+        }
+      ]
+    })
+  } catch (error) {
+    console.log(error);
+  }
+  try {
+    await prisma.user.deleteMany();
+    console.log("All users destroyed!");
+    await prisma.user.create({
+      data: {
+        email: "umer@gmail.com",
+        password: "12345678",
+        user_name: "umery",
+        profile: {
+          create: {
+            first_name: "umer",
+            last_name: "nadeem",
+            phone_number: "2345",
+            role: "admin",
+            gender: "male",
+          }
+        }
+      }
     });
-    console.log("Users Added in users table!\n");
+    console.log("User Added in users table!\n");
   } catch (error) {
     console.log(error);
   }

@@ -4,7 +4,7 @@ const router = express.Router();
 const prisma = require("../lib/prisma");
 const jwt = require("jsonwebtoken");
 
-router.route("/login_user").get((req, res) => {
+router.route("/login_user").post((req, res) => {
   console.log("login_user api hit!");
 
   const { email, password } = req.body;
@@ -17,7 +17,7 @@ router.route("/login_user").get((req, res) => {
         },
       })
       .then((query_res) => {
-        if (query_res) {
+        if (query_res && query_res.password == password) {
           const token = jwt.sign({ email: req.body.email }, "secret", {
             expiresIn: "1h",
           });
@@ -26,10 +26,11 @@ router.route("/login_user").get((req, res) => {
             email: query_res.email,
             first_name: query_res.first_name,
             last_name: query_res.last_name,
+            user_id: query_res.id,
             token,
           });
         } else {
-          res.status(404).json({ status: "user not found" });
+          res.status(404).json({ status: "Email or password are invalid!" });
         }
       })
       .catch((error) => {
@@ -70,7 +71,7 @@ router.route("/register_user").post((req, res) => {
   } catch (error) {
     console.log("error while registering user: ", error.message);
     res.status(500).json({
-      error_message: "Error while registering user!",
+      error: "Error while registering user!",
     });
   }
 });
