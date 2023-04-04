@@ -15,18 +15,24 @@ router.route("/login_user").post((req, res) => {
         where: {
           email,
         },
+        include: {
+          profile: true,
+        }
       })
       .then((query_res) => {
         if (query_res && query_res.password == password) {
           const token = jwt.sign({ email: req.body.email }, "secret", {
             expiresIn: "1h",
           });
+          console.log(query_res);
           res.status(200).json({
             status: "found",
             email: query_res.email,
-            first_name: query_res.first_name,
-            last_name: query_res.last_name,
-            user_id: query_res.id,
+            first_name: query_res.profile.first_name,
+            last_name: query_res.profile.last_name,
+            phone_number: query_res.profile.phone_number,
+            role: query_res.profile.role,
+            user_id: query_res.profile.user_id,
             token,
           });
         } else {
@@ -50,15 +56,23 @@ router.route("/register_user").post((req, res) => {
   const { first_name, last_name, email, password } = req.body;
   console.log(req.body);
 
+  const date = new Date();
+
   try {
     const result = prisma.user
       .create({
         data: {
-          first_name,
-          last_name,
-          email,
-          password,
-        },
+          email: email,
+          password: password,
+          user_name: "umery" + date.getMilliseconds(),
+          profile: {
+            create: {
+              first_name: first_name,
+              last_name: last_name,
+              phone_number: "2345",
+            }
+          }
+        }
       })
       .then((query_res) => {
         if (query_res) {
