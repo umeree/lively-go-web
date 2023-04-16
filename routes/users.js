@@ -5,16 +5,9 @@ const prisma = require("../lib/prisma");
 
 router.route("/all_users").get((req, res) => {
   console.log("all_users api hit!");
-
   try {
-    const result = prisma.user
-      .findMany({
-        select: {
-          email: true,
-          first_name: true,
-          last_name: true,
-        },
-      })
+    const result = prisma.profile
+      .findMany()
       .then((query_res) => {
         if (query_res) {
           res.status(200).json({

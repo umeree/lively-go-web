@@ -4,6 +4,9 @@ const router = express.Router();
 const prisma = require("../lib/prisma");
 const jwt = require("jsonwebtoken");
 
+
+//Login User Api
+
 router.route("/login_user").post((req, res) => {
   console.log("login_user api hit!");
 
@@ -32,7 +35,7 @@ router.route("/login_user").post((req, res) => {
             last_name: query_res.profile.last_name,
             phone_number: query_res.profile.phone_number,
             role: query_res.profile.role,
-            user_id: query_res.profile.user_id,
+            user_id: query_res.id,
             token,
           });
         } else {
@@ -49,6 +52,8 @@ router.route("/login_user").post((req, res) => {
     });
   }
 });
+
+//Register User Api
 
 router.route("/register_user").post((req, res) => {
   console.log("Register_user api hit!");
@@ -88,6 +93,45 @@ router.route("/register_user").post((req, res) => {
       error: "Error while registering user!",
     });
   }
+});
+
+//User  Inforation Api
+
+router.route("/userinformation").get((req,res) => {
+  const {id } = req.query;
+      console.log("User inormation api hit");
+      try{
+        const result = prisma.user
+        .findUnique({
+          where: {
+            id: parseInt(id)
+          },
+          include:{
+            profile: true
+          }
+        })
+        .then((query_res) => {
+          if (query_res) {
+            res.status(200).json({
+              status: "found",
+              email: query_res.email,
+              first_name: query_res.profile.first_name,
+              last_name: query_res.profile.last_name,
+              phone_number: query_res.profile.phone_number,
+              role: query_res.profile.role,
+              user_id: query_res.id,
+            });
+          }else {
+            res.status(404).json({ "error:": "user data not found: " });
+          }
+        }).catch((e)=>{
+          console.log(e);
+          res.status(500).json({ "error:": error });
+        })
+      }catch(error){
+        console.log(error)
+        res.status(500).json({ "error:": error });
+      }
 });
 
 module.exports = router;
