@@ -9,20 +9,21 @@ async function seed() {
     await prisma.role.createMany({
       data: [
         {
-          title: "user"
+          title: "user",
         },
         {
-          title: "streamer"
+          title: "streamer",
         },
         {
-          title: "admin"
-        }
-      ]
-    })
+          title: "admin",
+        },
+      ],
+    });
   } catch (error) {
     console.log(error);
   }
   try {
+    await prisma.profile.deleteMany();
     await prisma.user.deleteMany();
     console.log("All users destroyed!");
     await prisma.user.create({
@@ -37,11 +38,27 @@ async function seed() {
             phone_number: "2345",
             role: "admin",
             gender: "male",
-          }
-        }
-      }
+          },
+        },
+      },
     });
-    console.log("User Added in users table!\n");
+    await prisma.user.create({
+      data: {
+        email: "munyyb@gmail.com",
+        password: "12345678",
+        user_name: "Munyyb",
+        profile: {
+          create: {
+            first_name: "Munyyb",
+            last_name: "Ur Rehman",
+            phone_number: "2345",
+            role: "admin",
+            gender: "male",
+          },
+        },
+      },
+    });
+    console.log("All users Added!");
   } catch (error) {
     console.log(error);
   }
