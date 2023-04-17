@@ -23,6 +23,25 @@ async function seed() {
     console.log(error);
   }
   try {
+    await prisma.StreamsStatus.deleteMany();
+    console.log("All Streams Status destroyed!");
+    await prisma.StreamsStatus.createMany({
+      data: [
+        {
+          title: "Started",
+        },
+        {
+          title: "Live",
+        },
+        {
+          title: "Ended",
+        },
+      ],
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  try {
     await prisma.profile.deleteMany();
     await prisma.user.deleteMany();
     console.log("All users destroyed!");
