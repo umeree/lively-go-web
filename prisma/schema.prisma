@@ -11,15 +11,17 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  password  String
-  user_name String    @unique
-  status    String    @default("active")
-  profile   Profile?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  Stream    Stream?
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  password   String
+  user_name  String       @unique
+  status     String       @default("active")
+  profile    Profile?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime?    @updatedAt
+  Stream     Stream?
+  Followings Followings[]
+  Followers  Followers[]
 }
 
 model Profile {
@@ -61,4 +63,22 @@ model Stream {
   streamsStatusId Int?
   createdAt       DateTime       @default(now())
   updatedAt       DateTime?      @updatedAt
+}
+
+model Followings {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  followingId Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+}
+
+model Followers {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  followersId Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
 }

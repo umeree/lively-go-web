@@ -36,7 +36,6 @@ router.route("/search_users").get((req, res) => {
   }
   try {
     const { user } = req.query;
-    console.log("user:", user);
     const result = prisma.user
       .findMany({
         where: {
@@ -58,7 +57,6 @@ router.route("/search_users").get((req, res) => {
               user_id: res.id,
             });
           });
-          console.log("query_res:", formatedData);
           res.status(200).json({
             users: formatedData,
           });
