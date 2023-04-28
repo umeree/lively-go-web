@@ -107,20 +107,24 @@ router.route("/userinformation").get((req, res) => {
         },
         include: {
           profile: true,
-          followings: true,
-          followers: true,
+          Followings: true,
+          Followers: true,
         },
       })
       .then((query_res) => {
         if (query_res) {
           res.status(200).json({
-            status: "found",
-            email: query_res.email,
-            first_name: query_res.profile.first_name,
-            last_name: query_res.profile.last_name,
-            phone_number: query_res.profile.phone_number,
-            role: query_res.profile.role,
-            user_id: query_res.id,
+            user: {
+              status: "found",
+              email: query_res.email,
+              first_name: query_res.profile.first_name,
+              last_name: query_res.profile.last_name,
+              phone_number: query_res.profile.phone_number,
+              role: query_res.profile.role,
+              user_id: query_res.id,
+            },
+            followings: query_res.Followings,
+            followers: query_res.Followers,
           });
         } else {
           res.status(404).json({ "error:": "user data not found: " });
