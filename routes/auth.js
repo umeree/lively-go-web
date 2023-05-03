@@ -109,6 +109,7 @@ router.route("/userinformation").get((req, res) => {
           profile: true,
           Followings: true,
           Followers: true,
+          Stream: true,
         },
       })
       .then((query_res) => {
@@ -125,6 +126,7 @@ router.route("/userinformation").get((req, res) => {
             },
             followings: query_res.Followings,
             followers: query_res.Followers,
+            streams: query_res.Stream,
           });
         } else {
           res.status(404).json({ "error:": "user data not found: " });
@@ -132,7 +134,7 @@ router.route("/userinformation").get((req, res) => {
       })
       .catch((e) => {
         console.log(e);
-        res.status(500).json({ "error:": error });
+        res.status(500).json({ "error:": e });
       });
   } catch (error) {
     console.log(error);
