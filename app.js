@@ -24,9 +24,11 @@ app.use((_, res, next) => {
 const auth = require("./routes/auth");
 const users = require("./routes/users");
 const profile = require("./routes/profile");
+const streams = require("./routes/streams");
 
 app.use("/api/v1", auth);
 app.use("/api/v1", users);
 app.use("/api/v1", profile);
+app.use("/api/v1", streams);
 
 module.exports = app;
