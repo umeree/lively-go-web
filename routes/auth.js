@@ -107,8 +107,16 @@ router.route("/userinformation").get((req, res) => {
         },
         include: {
           profile: true,
-          Followings: true,
-          Followers: true,
+          Followings: {
+            select: {
+              user: true,
+            },
+          },
+          Followers: {
+            select: {
+              user: true,
+            },
+          },
           Stream: true,
         },
       })
@@ -120,7 +128,7 @@ router.route("/userinformation").get((req, res) => {
               email: query_res.email,
               first_name: query_res.profile.first_name,
               last_name: query_res.profile.last_name,
-              user_name:  query_res.user_name,
+              user_name: query_res.user_name,
               phone_number: query_res.profile.phone_number,
               role: query_res.profile.role,
               user_id: query_res.id,
