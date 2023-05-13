@@ -87,4 +87,35 @@ router.route("/update_stream").post((req, res) => {
     });
   }
 });
+// Get All streams
+
+
+router.route("/all_streams").get((req, res) => {
+  try {
+    const result = prisma.Stream
+      .findMany({
+        where:{
+          status: "live"
+        }
+      })
+      .then((query_res) => {
+        if (query_res) {
+          res.status(200).json({
+            users: query_res,
+          });
+        } else {
+          res.status(404).json({ status: "users not found" });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } catch (error) {
+    console.log("error while getting users: ", error.message);
+    res.status(500).json({
+      error_message: "Error while getting users!",
+    });
+  }
+});
+
 module.exports = router;
