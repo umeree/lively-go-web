@@ -19,6 +19,7 @@ model User {
   profile   Profile?
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
+  hearts    Int       @default(0)
   Stream    Stream[]
   followers Follows[] @relation("following")
   following Follows[] @relation("follower")

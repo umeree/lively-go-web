@@ -132,6 +132,7 @@ router.route("/userinformation").get((req, res) => {
               phone_number: query_res.profile.phone_number,
               role: query_res.profile.role,
               user_id: query_res.id,
+              hearts: query_res.hearts,
             },
             followings: query_res.following,
             followers: query_res.followers,
