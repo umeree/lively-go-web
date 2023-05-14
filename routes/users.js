@@ -6,7 +6,16 @@ const prisma = require("../lib/prisma");
 router.route("/all_users").get((req, res) => {
   try {
     const result = prisma.profile
-      .findMany()
+      .findMany({
+        include: {
+          user: {
+            select: {
+              id: true,
+              user_name: true,
+            },
+          },
+        },
+      })
       .then((query_res) => {
         if (query_res) {
           res.status(200).json({
