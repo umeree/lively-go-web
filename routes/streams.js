@@ -138,6 +138,7 @@ router.route("/send_hearts").post(async (req, res) => {
         if (r) {
           return r;
         } else {
+          console.log("user not found");
           res.status(404).json({
             message: "user not found!",
           });
@@ -153,6 +154,7 @@ router.route("/send_hearts").post(async (req, res) => {
         if (r) {
           return r;
         } else {
+          console.log("owner not found");
           res.status(404).json({
             message: "owner not found!",
           });
@@ -172,7 +174,7 @@ router.route("/send_hearts").post(async (req, res) => {
         if (r) {
           return r;
         } else {
-          res.status(404).json({
+          res.status(500).json({
             message: "owner hearts failed",
           });
         }
@@ -191,7 +193,7 @@ router.route("/send_hearts").post(async (req, res) => {
         if (r) {
           return r;
         } else {
-          res.status(404).json({
+          res.status(500).json({
             message: "user hearts failed",
           });
         }
