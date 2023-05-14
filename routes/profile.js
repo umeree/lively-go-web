@@ -25,39 +25,40 @@ router.route("/follow_user").post(async (req, res) => {
           status: 400,
           userId: followersId,
         });
-        return true;
       } else {
-        return false;
+        return r;
       }
     });
-    const data = await prisma.Follows.create({
-      data: {
-        followerId: parseInt(userId),
-        followingId: parseInt(followersId),
-      },
-    })
-      .then((r) => {
-        console.log(r);
-        if (r) {
-          res.status(200).json({
-            message: "User added to your followings",
-            status: 200,
-            userId: followersId,
-          });
-        } else {
+    if (checkForExsistance) {
+      const data = await prisma.Follows.create({
+        data: {
+          followerId: parseInt(userId),
+          followingId: parseInt(followersId),
+        },
+      })
+        .then((r) => {
+          console.log(r);
+          if (r) {
+            res.status(200).json({
+              message: "User added to your followings",
+              status: 200,
+              userId: followersId,
+            });
+          } else {
+            res.status(500).json({
+              error: 500,
+              error_message: "Error while getting users!",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
           res.status(500).json({
             error: 500,
-            error_message: "Error while getting users!",
+            error_message: "Error while getting users:" + err,
           });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({
-          error: 500,
-          error_message: "Error while getting users:" + err,
         });
-      });
+    }
   } catch (error) {
     console.log("error while getting users: ", error.message);
     res.status(500).json({
