@@ -31,12 +31,12 @@ async function seed() {
         email: "umer@gmail.com",
         password: "12345678",
         user_name: "umery",
+        role: "admin",
         profile: {
           create: {
             first_name: "umer",
             last_name: "nadeem",
             phone_number: "2345",
-            role: "admin",
             gender: "male",
           },
         },
@@ -47,12 +47,12 @@ async function seed() {
         email: "munyyb@gmail.com",
         password: "12345678",
         user_name: "Munyyb",
+        role: "admin",
         profile: {
           create: {
             first_name: "Munyyb",
             last_name: "Ur Rehman",
             phone_number: "2345",
-            role: "admin",
             gender: "male",
           },
         },

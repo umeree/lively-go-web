@@ -13,9 +13,10 @@ router.route("/login_user").post((req, res) => {
 
   try {
     const result = prisma.user
-      .findUnique({
+      .findFirst({
         where: {
           email,
+          status: "active",
         },
         include: {
           profile: true,
@@ -90,6 +91,50 @@ router.route("/register_user").post((req, res) => {
     console.log("error while registering user: ", error.message);
     res.status(500).json({
       error: "Error while registering user!",
+    });
+  }
+});
+
+//Block user
+router.route("/block_user").post(async (req, res) => {
+  console.log("block_user api hit!");
+
+  const { userId } = req.query;
+  if (!userId) {
+    console.log("UserId is required!");
+    res.status(500).json({ error: 500, message: "User Id is required!" });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: parseInt(userId),
+      },
+    });
+    if (user) {
+      const result = prisma.user
+        .update({
+          where: {
+            id: parseInt(userId),
+          },
+          data: {
+            status: user.status == "active" ? "block" : "active",
+          },
+        })
+        .then((query_res) => {
+          res.status(200).json({
+            message: `user with userId ${userId} blocked!`,
+            data: query_res,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  } catch (error) {
+    console.log("error while blocking in user: ", error.message);
+    res.status(500).json({
+      error_message: "Error while blocking user!",
     });
   }
 });

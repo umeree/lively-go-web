@@ -26,11 +26,13 @@ const users = require("./routes/users");
 const profile = require("./routes/profile");
 const streams = require("./routes/streams");
 const payments = require("./routes/payments");
+const admins = require("./routes/admin");
 
 app.use("/api/v1", auth);
 app.use("/api/v1", users);
 app.use("/api/v1", profile);
 app.use("/api/v1", streams);
 app.use("/api/v1", payments);
+app.use("/api/v1", admins);
 
 module.exports = app;

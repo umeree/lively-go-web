@@ -12,11 +12,19 @@ router.route("/all_users").get((req, res) => {
             select: {
               id: true,
               user_name: true,
+              email: true,
+              status: true,
+              _count: {
+                select: {
+                  Stream: true,
+                },
+              },
             },
           },
         },
       })
       .then((query_res) => {
+        console.log(query_res);
         if (query_res) {
           res.status(200).json({
             users: query_res,

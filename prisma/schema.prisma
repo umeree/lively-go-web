@@ -20,6 +20,7 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   hearts    Int       @default(0)
+  role      String    @default("user")
   Stream    Stream[]
   followers Follows[] @relation("following")
   following Follows[] @relation("follower")
@@ -32,7 +33,6 @@ model Profile {
   first_name   String
   last_name    String
   phone_number String
-  role         String    @default("user")
   gender       String?
   image_url    String?
   createdAt    DateTime  @default(now())
