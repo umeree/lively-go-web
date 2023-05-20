@@ -14,6 +14,7 @@ router.route("/all_users").get((req, res) => {
               user_name: true,
               email: true,
               status: true,
+              hearts: true,
               _count: {
                 select: {
                   Stream: true,

@@ -56,4 +56,73 @@ router.route("/login_admin").post((req, res) => {
   }
 });
 
+//get all streams
+router.route("/all_streams_admin").get((req, res) => {
+  try {
+    const result = prisma.Stream.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            user_name: true,
+          },
+        },
+      },
+    })
+      .then((query_res) => {
+        if (query_res) {
+          res.status(200).json({
+            streams: query_res,
+          });
+        } else {
+          res.status(404).json({ status: "Streams not found" });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } catch (error) {
+    console.log("error while getting Streams: ", error.message);
+    res.status(500).json({
+      error_message: "Error while getting Streams!",
+    });
+  }
+});
+
+//end a live stream
+router.route("/end_stream").post((req, res) => {
+  const { streamId } = req.query;
+  if (!streamId) {
+    console.log("Stream Id is required!");
+    res.status(500).json({ message: "StreamID is required!" });
+  }
+  try {
+    const result = prisma.Stream.update({
+      where: {
+        id: parseInt(streamId),
+      },
+      data: {
+        status: "ended",
+      },
+    })
+      .then((query_res) => {
+        if (query_res) {
+          res.status(200).json({
+            message: "Stream ended!",
+          });
+        } else {
+          res.status(500).json({ message: "Error while ending stream!" });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } catch (error) {
+    console.log("Error while ending stream: ", error.message);
+    res.status(500).json({
+      error_message: "Error while ending stream!",
+    });
+  }
+});
+
 module.exports = router;
