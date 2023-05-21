@@ -57,7 +57,19 @@ router.route("/search_users").get((req, res) => {
     const result = prisma.user
       .findMany({
         where: {
-          user_name: user,
+          OR: [
+            {
+              user_name: {
+                contains: user,
+              },
+            },
+            {
+              email: {
+                contains: user,
+              },
+            },
+          ],
+          status: "active",
         },
         include: {
           profile: true,
@@ -94,4 +106,48 @@ router.route("/search_users").get((req, res) => {
   }
 });
 
+//** Get user information */
+//User  Inforation Api
+
+router.route("/get_enduser_information").get((req, res) => {
+  const { id } = req.query;
+  if (!id) {
+    console.log("UserId is required!");
+    res.status(404).json({ error: "Userid is requied!" });
+  }
+  try {
+    const result = prisma.user
+      .findUnique({
+        where: {
+          id: parseInt(id),
+        },
+        include: {
+          profile: true,
+          _count: {
+            select: {
+              Stream: true,
+              followers: true,
+              following: true,
+            },
+          },
+        },
+      })
+      .then((query_res) => {
+        if (query_res) {
+          res.status(200).json({
+            user: query_res,
+          });
+        } else {
+          res.status(404).json({ "error:": "user data not found: " });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+        res.status(500).json({ "error:": e });
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ "error:": error });
+  }
+});
 module.exports = router;

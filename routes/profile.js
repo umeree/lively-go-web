@@ -18,7 +18,7 @@ router.route("/follow_user").post(async (req, res) => {
           followingId: parseInt(followersId),
         },
       },
-    }).then((r) => {
+    }).then(async (r) => {
       if (r) {
         res.status(400).json({
           message: "User Already exists!",
@@ -26,39 +26,36 @@ router.route("/follow_user").post(async (req, res) => {
           userId: followersId,
         });
       } else {
-        return r;
-      }
-    });
-    if (checkForExsistance) {
-      const data = await prisma.Follows.create({
-        data: {
-          followerId: parseInt(userId),
-          followingId: parseInt(followersId),
-        },
-      })
-        .then((r) => {
-          console.log(r);
-          if (r) {
-            res.status(200).json({
-              message: "User added to your followings",
-              status: 200,
-              userId: followersId,
-            });
-          } else {
+        const data = await prisma.Follows.create({
+          data: {
+            followerId: parseInt(userId),
+            followingId: parseInt(followersId),
+          },
+        })
+          .then((rr) => {
+            console.log(rr);
+            if (rr) {
+              res.status(200).json({
+                message: "User added to your followings",
+                status: 200,
+                userId: followersId,
+              });
+            } else {
+              res.status(500).json({
+                error: 500,
+                error_message: "Error while getting users!",
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
             res.status(500).json({
               error: 500,
-              error_message: "Error while getting users!",
+              error_message: "Error while getting users:" + err,
             });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          res.status(500).json({
-            error: 500,
-            error_message: "Error while getting users:" + err,
           });
-        });
-    }
+      }
+    });
   } catch (error) {
     console.log("error while getting users: ", error.message);
     res.status(500).json({
